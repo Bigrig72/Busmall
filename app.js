@@ -42,10 +42,6 @@ function randomImage() {
 
 
 
-
-
-
-
   // function setimages(randindx)
   // Setting image source for all 3 images displayed
   firstImg.src = allProducts[firstRandomImage].filepath;
@@ -69,42 +65,26 @@ function randomImage() {
     firstImg.removeEventListener('click', randomImage);
     secondImg.removeEventListener('click', randomImage);
     thirdImg.removeEventListener('click', randomImage);
-// here at the end of the click tracker is where you want to show results
-  //   displayResults();
+
+   displayResults();
+
    }
 };
 
 function displayResults() {
 
-  var results = document.getElementById('main-content');
-  
+var results = document.getElementById('results');
 
-  //go through all products in for loop
   for (var i = 0; i < allProducts.length; i++) {
 
-    //create img tag with the src of the filepath at allProducts[i]
-    
+    var listViews = document.createElement('li');
+
+
+    listViews.textContent = allProducts[i].views + ' views for the ' + allProducts[i].name;
+
+    results.appendChild(listViews);
     }
-
-
-
-
-    displayImage = createElementByid('IMG')
-    document.main.appenChild(displayImage)
-
-
-
-    // append to main (you got it and set a variable for main above for loop)
-
-
-
-
-    // create a p tag for the views
-    // append to main (you got it and set a variable for main above for loop)
-
-    // create a p tag for the votes
-    // append to main (you got it and set a variable for main above for loop)    
-  }
+  };
 
 
 function imageVote(imageSrc) {
