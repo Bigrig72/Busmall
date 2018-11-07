@@ -4,9 +4,9 @@ var firstImg = document.getElementById('first');
 var secondImg = document.getElementById('second');
 var thirdImg = document.getElementById('third');
 
-
 var previouslyDisplayed = [];
 var allProducts = [];
+var chartLabels = [];
 var totalClickTracker = 0;
 
 function Product(name, filepath, altText) {
@@ -37,16 +37,12 @@ function randomImage() {
     firstRandomImage = Math.floor(Math.random() * allProducts.length);
     secondRandomImage = Math.floor(Math.random() * allProducts.length);
     thirdRandomImage = Math.floor(Math.random() * allProducts.length);
-
   }
 
   previouslyDisplayed[0] = firstRandomImage;
   previouslyDisplayed[1] = secondRandomImage;
   previouslyDisplayed[2] = thirdRandomImage
   console.log('images previously displayed ' + previouslyDisplayed);
-
-
-
 
   // Setting image source for all 3 images displayed
   firstImg.src = allProducts[firstRandomImage].filepath;
@@ -57,7 +53,6 @@ function randomImage() {
   secondImg.alt = allProducts[secondRandomImage].altText;
   thirdImg.alt = allProducts[thirdRandomImage].altText;
 
-
   //setting the amount of views for each image displayed
   allProducts[firstRandomImage].views++;
   allProducts[secondRandomImage].views++;
@@ -65,14 +60,12 @@ function randomImage() {
 
   totalClickTracker++;
 
-
   if (totalClickTracker === 25) {
     firstImg.removeEventListener('click', randomImage);
     secondImg.removeEventListener('click', randomImage);
     thirdImg.removeEventListener('click', randomImage);
 
     displayResults();
-
   }
 };
 
@@ -81,10 +74,14 @@ function handleClick(event) {
 
   randomImage();
 
-
   for (var i = 0; i < allProducts.length; i++) {
     if (event.target.alt === allProducts[i].name) {
       allProducts[i].votes++;
+
+
+      myChart.data.datasets[0].data[i]++;
+      console.log(myChart.data.datasets[0].data);
+      myChart.update();
     }
   }
 };
@@ -100,15 +97,6 @@ function displayResults() {
   }
 };
 
-
-function imageVote(imageSrc) {
-
-  for (var i = 0; i < allProducts.length; i++) {
-    if (imageSrc === allProducts[i].filepath) {
-      allProducts[i].vote++;
-    }
-  }
-};
 
 
 new Product('bag', './assets/bag.jpg', 'bag');
@@ -133,9 +121,101 @@ new Product('water-can', './assets/water-can.jpg', 'water-can');
 new Product('wine-glass', './assets/wine-glass.jpg', 'wine-glass');
 
 
+
 firstImg.addEventListener('click', handleClick);
 secondImg.addEventListener('click', handleClick);
 thirdImg.addEventListener('click', handleClick);
 
 
+
 randomImage();
+
+
+var ctx = document.getElementById("myChart").getContext('2d');
+
+var chartConfig = {
+  type: 'bar',
+  data: {
+    labels: chartLabels,
+    datasets: [{
+      label: '# of Votes',
+      data: new Array(allProducts.length).fill(0),
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  }
+};
+
+function createLabels() {
+  for(var i = 0; i < allProducts.length; i++){
+    chartLabel.push(allProducts[i].name);
+  }
+}
+var myChart = new Chart(ctx, chartConfig);
+
+chartLabels.addEventListener('click', function(event) {
+  // validate the target as a p tag
+  // get the id of the target p tag
+  // use the id to get the index location for what data point to increment in data
+
+  var pId = event.target.id;
+  var idx = myChart.indexOf(pId);
+
+  if (idx !== -1) {
+    myChart.data.datasets[0].data[idx] += 1;
+    console.log(myChart.data.datasets[0].data);
+    myChart.update();
+  }
+})
