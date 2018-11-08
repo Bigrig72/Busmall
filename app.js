@@ -179,5 +179,15 @@ function displayResults() {
     }
   };
 
-  return new Chart(ctx, chartConfig);
+  var voteChart = new Chart(ctx, chartConfig); 
+
+  // if(localStorage.getItem('voteData')) {
+  //   var voteData = localStorage.getItem('voteData');
+  //     voteChart.data.datasets[0].data = JSON.parse(voteData);
+  // }
+
+  var jsonData = JSON.stringify(chartVotes);
+  localStorage.setItem('voteData', jsonData);
+
+  voteChart.update();
 };
